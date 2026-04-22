@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MemeWorks | Human-First Data</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- GSAP & Lenis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            green: '#8ED462',
+                            cream: '#F5F1E4',
+                            dark: '#2C2E2A',
+                            white: '#FFFFFF',
+                            orange: '#FF8A65' // Complementary accent
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    fontSize: {
+                        'huge': 'clamp(4rem, 15vw, 12rem)',
+                        'big-header': 'clamp(2.5rem, 6vw, 5rem)',
+                    },
+                    borderRadius: {
+                        'xl': '1rem',
+                        '2xl': '2rem',
+                        '3xl': '3rem',
+                    },
+                    animation: {
+                        'spin-slow': 'spin 12s linear infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #F5F1E4;
+            color: #2C2E2A;
+            overflow-x: hidden;
+        }
+
+        .lenis.lenis-smooth {
+            scroll-behavior: auto;
+        }
+
+        .clip-text-image {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* SVG Path Animation utilities */
+        .path-line {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+        }
+
+        /* Marquee */
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Card Hover Effects */
+        .hover-card {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .hover-card:hover {
+            transform: translateY(-10px) scale(1.02);
+        }
+
+        /* Node Hover - subtle lift and straighten */
+        .hero-node {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+        .hero-node:hover {
+            transform: translateY(-8px) rotate(0deg) scale(1.05) !important;
+            z-index: 30;
+        }
+
+        .blob-bg {
+            position: absolute;
+            filter: blur(80px);
+            opacity: 0.6;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loading Overlay -->
+    <div id="loader" class="fixed inset-0 bg-brand-green z-[100] flex items-center justify-center transition-all duration-700">
+        <div class="text-brand-dark text-4xl font-bold tracking-tighter">Meme<span class="italic font-light">Works</span></div>
+    </div>
+
+    <!-- Main Wrapper -->
+    <main>
+
+        <!-- HERO SECTION -->
+        <section class="relative min-h-[90vh] bg-brand-green flex flex-col justify-center items-center pt-12 pb-12 overflow-hidden">
+            
+            <!-- Animated Background Lines (The Thread) -->
+            <div class="absolute inset-0 w-full h-full pointer-events-none z-0">
+                <svg class="w-full h-full" viewBox="0 0 1440 900" fill="none" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Main Path -->
+                    <path id="heroPath" d="M-100,200 C150,200 400,100 600,300 C800,500 1000,200 1200,400 C1350,550 1100,750 720,850 C500,900 720,1000 720,1200" 
+                    stroke="#F5F1E4" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" class="path-line opacity-0"/>
+                </svg>
+            </div>
+
+            <!-- Floating Node Modules (Positioned along the canvas path) -->
+            <div class="absolute inset-0 z-0 pointer-events-none">
+                <!-- Node 1: Top Left - Generate Image -->
+                <div class="hero-node opacity-0 absolute top-[22%] left-[12%] bg-white rounded-xl shadow-lg rotate-[-8deg] transform scale-0 border border-brand-dark/10 pointer-events-auto">
+                    <div class="flex items-center gap-2 px-3 py-2 border-b border-brand-dark/10">
+                        <div class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
+                        <span class="text-[9px] font-bold uppercase tracking-widest text-gray-400">Image</span>
+                    </div>
+                    <div class="flex items-center gap-2 px-3 py-2 relative">
+                        <i class="fa-solid fa-wand-magic-sparkles text-xs text-brand-dark"></i>
+                        <span class="text-[11px] font-bold text-brand-dark">Generate Image</span>
+                        <div class="absolute -right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-white border-2 border-brand-dark rounded-full"></div>
+                    </div>
+                </div>
+
+                <!-- Node 2: Right Middle - Clone Voice -->
+                <div class="hero-node opacity-0 absolute top-[38%] right-[12%] bg-brand-dark rounded-xl shadow-xl rotate-[5deg] transform scale-0 pointer-events-auto">
+                    <div class="flex items-center gap-2 px-3 py-2 border-b border-white/10">
+                        <div class="w-1.5 h-1.5 bg-brand-green rounded-full"></div>
+                        <span class="text-[9px] font-bold uppercase tracking-widest text-white/50">Audio</span>
+                    </div>
+                    <div class="flex items-center gap-2 px-3 py-2 relative">
+                        <div class="absolute -left-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-brand-dark border-2 border-brand-green rounded-full"></div>
+                        <i class="fa-solid fa-waveform text-xs text-brand-green"></i>
+                        <span class="text-[11px] font-bold text-brand-cream">Clone Voice</span>
+                        <div class="absolute -right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-brand-dark border-2 border-brand-green rounded-full"></div>
+                    </div>
+                </div>
+
+                <!-- Node 3: Bottom Left - Output Video -->
+                <div class="hero-node opacity-0 absolute bottom-[28%] left-[18%] bg-brand-cream border-2 border-brand-dark rounded-lg shadow-[4px_4px_0px_rgba(0,0,0,1)] rotate-[-3deg] transform scale-0 pointer-events-auto">
+                    <div class="flex items-center gap-2 px-3 py-2 border-b-2 border-brand-dark">
+                        <div class="w-1.5 h-1.5 bg-brand-dark rounded-full"></div>
+                        <span class="text-[9px] font-bold uppercase tracking-widest text-brand-dark/60">Output</span>
+                    </div>
+                    <div class="flex items-center gap-2 px-3 py-2 relative">
+                        <div class="absolute -left-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-brand-cream border-2 border-brand-dark rounded-full"></div>
+                        <i class="fa-solid fa-film text-xs text-brand-dark"></i>
+                        <span class="text-[11px] font-bold text-brand-dark">Output Video</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="container mx-auto px-4 text-center z-10 relative">
+                
+                <div class="mb-8 inline-flex items-center gap-2 bg-brand-dark/5 backdrop-blur-sm px-5 py-2 rounded-full border border-brand-dark/10 text-brand-dark font-bold text-sm tracking-wide hero-text translate-y-20 opacity-0">
+                    <span class="w-2 h-2 bg-brand-dark rounded-full"></span> WAITLIST NOW OPEN
+                </div>
+
+                <h1 class="font-extrabold leading-[0.85] tracking-tight text-brand-dark mb-8 relative uppercase text-[clamp(3rem,10vw,9rem)]">
+                    <!-- Text Layers for depth effect with the SVG line -->
+                    <span class="block relative z-10 hero-text translate-y-20 opacity-0 mix-blend-hard-light">The Vibe</span>
+                    <span class="block relative z-10 hero-text translate-y-20 opacity-0">Culture Platform<span class="text-brand-cream">.</span></span>
+                    
+                    <span class="block text-xl md:text-3xl font-medium tracking-normal mt-8 max-w-2xl mx-auto leading-normal translate-y-20 opacity-0 hero-text text-brand-dark/80 normal-case">
+                        Culture is made on a canvas now.
+                    </span>
+                </h1>   
+
+                <div class="mt-8 flex justify-center gap-4 translate-y-20 opacity-0 hero-text relative z-20">
+                    <a href="#methodology" class="bg-brand-dark text-brand-cream px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-brand-dark transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1" rel="nofollow">
+                        Peek inside
+                    </a>
+                </div>
+
+                <p class="mt-6 text-sm text-brand-dark/60 font-medium translate-y-20 opacity-0 hero-text relative z-20">
+                    Built by the team behind WOMBO <span class="mx-2 opacity-40">·</span> 200M+ downloads <span class="mx-2 opacity-40">·</span> Google Play Best App <span class="mx-2 opacity-40">·</span> NVIDIA-backed
+                </p>
+
+            </div>
+        </section>
+
+        <!-- MARQUEE SECTION -->
+        <section id="marquee" class="bg-brand-dark py-8 overflow-hidden relative z-20 opacity-0">
+            <div class="marquee-container">
+                <div class="marquee-content text-brand-cream text-4xl md:text-6xl font-black uppercase tracking-tighter">
+                    Compose • Remix • Share • Get Paid • Repeat • Compose • Remix • Share • Get Paid • Repeat •
+                </div>
+                <!-- Duplicate for seamless loop -->
+                <div class="marquee-content text-brand-cream text-4xl md:text-6xl font-black uppercase tracking-tighter">
+                    Compose • Remix • Share • Get Paid • Repeat • Compose • Remix • Share • Get Paid • Repeat •
+                </div>
+            </div>
+        </section>
+
+        <!-- SCROLLYTELLING "SNAKE" SECTION -->
+        <section id="methodology" class="relative bg-brand-cream py-32 overflow-hidden">
+            
+            <!-- The Path (SVG) -->
+            <div class="absolute inset-0 pointer-events-none w-full h-full z-0 opacity-50">
+                <svg class="w-full h-full" viewBox="0 0 1440 3200" fill="none" preserveAspectRatio="xMidYMin slice" xmlns="http://www.w3.org/2000/svg">
+                    <path id="snakePath" d="M720,0 C720,0 720,200 720,300 C720,600 200,600 200,900 C200,1200 1240,1200 1240,1500 C1240,1800 200,1800 200,2100 C200,2400 720,2400 720,2700 C720,2900 720,3200 720,3200" 
+                    stroke="#8ED462" stroke-width="120" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                </svg>
+            </div>
+
+            <div class="container mx-auto px-4 relative z-10">
+                
+                <h2 class="text-big-header font-bold text-center mb-32 relative">
+                    Every AI model. One canvas.<br><span class="text-brand-green bg-brand-dark px-4 rounded-xl inline-block transform -rotate-2">No tabs.</span>
+                </h2>
+
+                <!-- Step 1 -->
+                <div class="flex flex-col md:flex-row items-center justify-between mb-48 min-h-[50vh] scroll-section">
+                    <div class="w-full md:w-5/12 order-2 md:order-1">
+                        <div class="bg-white p-10 rounded-3xl shadow-2xl hover-card border-b-8 border-brand-green">
+                            <div class="w-16 h-16 bg-brand-cream rounded-full flex items-center justify-center mb-6 text-2xl">🔭</div>
+                            <h3 class="text-3xl font-bold mb-4">Discover</h3>
+                            <p class="text-lg text-gray-600 mb-6">Find trends, formats, and ideas at lightning speed. The culture is moving. You'll see it first.</p>
+                            <button class="text-brand-dark font-bold underline decoration-brand-green decoration-4 hover:bg-brand-green hover:no-underline transition-all px-2 md:text-lg">See Trends</button>
+                        </div>
+                    </div>
+                    <!-- Empty space for snake path -->
+                    <div class="w-full md:w-1/2"></div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="flex flex-col md:flex-row items-center justify-between mb-48 min-h-[50vh] scroll-section">
+                    <div class="w-full md:w-1/2"></div>
+                    <div class="w-full md:w-5/12">
+                        <div class="bg-white p-10 rounded-3xl shadow-2xl hover-card border-b-8 border-yellow-400 rotate-2">
+                             <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mb-6 text-2xl">🎛️</div>
+                            <h3 class="text-3xl font-bold mb-4">Compose</h3>
+                            <p class="text-lg text-gray-600 mb-6">Every AI model on one canvas. Wired your way. The workflow you'd build in your head, made real.</p>
+                            <div class="flex gap-2 mt-4 flex-wrap">
+                                <span class="bg-gray-100 px-3 py-1 rounded-lg text-sm font-medium">Inputs</span>
+                                <span class="bg-gray-100 px-3 py-1 rounded-lg text-sm font-medium">Outputs</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="flex flex-col md:flex-row items-center justify-between mb-48 min-h-[50vh] scroll-section">
+                    <div class="w-full md:w-5/12">
+                        <div class="bg-white p-10 rounded-3xl shadow-2xl hover-card border-b-8 border-purple-500 -rotate-1 relative overflow-hidden">
+                            <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-6 text-2xl">🚀</div>
+                            <h3 class="text-3xl font-bold mb-4">Share</h3>
+                            <p class="text-lg text-gray-600 mb-6">A viral meme. A character. A mini app. An experience. Ship it to the world and scale what hits.</p>
+                            
+                            <div class="w-full bg-gray-100 rounded-full h-2 mb-4 overflow-hidden">
+                                <div class="bg-purple-500 h-full w-[85%]"></div>
+                            </div>
+                            <span class="text-xs text-gray-500 font-bold uppercase tracking-wide">Viral Potential: High</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Meme Phone Frame -->
+                <div class="flex justify-center mb-32">
+                    <div class="relative z-20 rotate-[-3deg] hover:rotate-0 transition-transform duration-500">
+                        <!-- Phone outer frame -->
+                        <div class="relative bg-brand-dark rounded-[2.5rem] p-3 shadow-2xl w-[260px] md:w-[300px]">
+                            <!-- Phone inner screen (9:16) -->
+                            <div class="relative rounded-[1.8rem] overflow-hidden bg-brand-dark aspect-[9/16]">
+                                <!-- Notch -->
+                                <div class="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-5 bg-brand-dark rounded-full z-30"></div>
+                                <!-- Meme content -->
+                                <img src="https://media1.tenor.com/m/ZXPCRT8wKXgAAAAd/cat-scuba-cat.gif" alt="" class="w-full h-full object-contain">
+                            </div>
+                        </div>
+                        <!-- Floating "LIVE" badge -->
+                        <div class="absolute -top-3 -right-3 bg-brand-green text-brand-dark text-xs font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg rotate-[8deg] flex items-center gap-1.5 border-2 border-brand-dark">
+                            <div class="w-1.5 h-1.5 bg-brand-dark rounded-full animate-pulse"></div>
+                            Shipped
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- STATS / BENTO GRID -->
+        <section class="bg-white py-24 rounded-t-[4rem]">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-20">
+                    <h2 class="text-5xl md:text-7xl font-bold mb-6">Built for the <span class="text-brand-green italic">shift</span>.</h2>
+                    <p class="text-xl text-gray-500 max-w-3xl mx-auto">Vibe coding took the friction out of building. Vibe culture takes the friction out of creating culture.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                    <!-- Big Cell: Studio -->
+                    <div class="md:col-span-2 bg-brand-cream rounded-3xl p-10 flex flex-col justify-between min-h-[300px] relative overflow-hidden group">
+                        <div class="absolute right-0 bottom-0 w-64 h-64 bg-brand-green rounded-full translate-x-1/2 translate-y-1/2 group-hover:scale-110 transition-transform duration-500"></div>
+                        <div>
+                            <span class="block text-xl font-medium mb-2 opacity-60">01 — Studio</span>
+                            <h3 class="text-5xl md:text-7xl font-bold tracking-tight text-brand-dark leading-[0.95]">One canvas.<br>Every model.</h3>
+                        </div>
+                        <p class="text-xl font-medium relative z-10 max-w-md mt-6">Image, video, audio, AI-native experiences for your audience, and so much more.</p>
+                    </div>
+
+                    <!-- Tall Cell: Marketplace -->
+                    <div class="bg-brand-dark text-white rounded-3xl p-10 flex flex-col justify-center text-left relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                        <i class="fa-solid fa-shuffle text-5xl text-brand-green mb-6 group-hover:rotate-180 transition-transform duration-500 relative z-10"></i>
+                        <span class="block text-sm font-bold uppercase tracking-widest opacity-60 mb-2 relative z-10">02 — Marketplace</span>
+                        <h3 class="text-3xl md:text-4xl font-bold mb-3 relative z-10 leading-tight">Formats, not files.</h3>
+                        <p class="opacity-70 relative z-10">Publish a workflow. Others browse, run, remix, fork.</p>
+                    </div>
+
+                    <!-- Wide Cell: Attribution -->
+                    <div class="md:col-span-3 bg-brand-green rounded-3xl p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+                        <div class="text-left">
+                            <span class="block text-sm font-bold uppercase tracking-widest text-brand-dark/60 mb-2">03 — Attribution</span>
+                            <h3 class="text-4xl md:text-5xl font-bold text-brand-dark mb-3 leading-tight">Every remix traced.<br>Every originator paid.</h3>
+                            <p class="text-xl font-medium text-brand-dark/80 max-w-2xl">A creator's back catalog becomes a passive income stream. Creative lineage becomes economically valuable, for the first time.</p>
+                        </div>
+                        <div class="flex items-center gap-2 flex-shrink-0">
+                            <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center font-bold text-brand-dark text-lg rotate-[-6deg] shadow-lg">A</div>
+                            <i class="fa-solid fa-arrow-right text-brand-dark/60"></i>
+                            <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center font-bold text-brand-dark text-lg rotate-[4deg] shadow-lg">B</div>
+                            <i class="fa-solid fa-arrow-right text-brand-dark/60"></i>
+                            <div class="w-14 h-14 bg-brand-dark rounded-2xl flex items-center justify-center font-bold text-brand-green text-lg rotate-[-3deg] shadow-lg">$</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA FOOTER -->
+        <footer class="bg-brand-dark pt-32 pb-12 rounded-t-[3rem] -mt-10 overflow-hidden relative">
+            
+            <!-- Background Blob -->
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-4xl bg-brand-green opacity-10 blur-[120px] rounded-full pointer-events-none"></div>
+
+            <div class="container mx-auto px-4 text-center relative z-10">
+                <div class="mb-12">
+                     <span class="inline-block px-4 py-2 rounded-full border border-gray-600 text-gray-300 text-sm mb-6">Early access goes out in waves</span>
+                    <h2 class="text-big-header font-bold text-white leading-tight mb-8">
+                        The internet is about to get<br>
+                        a lot <span class="text-brand-green">more interesting.</span>
+                    </h2>
+                    
+                    <a href="#" class="inline-flex items-center gap-4 bg-brand-green text-brand-dark text-xl md:text-2xl font-bold px-10 py-6 rounded-full hover:scale-105 hover:shadow-[0_0_40px_rgba(142,212,98,0.4)] transition-all duration-300" rel="nofollow">
+                        Join the waitlist <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="mt-16 text-gray-600 text-sm text-center max-w-5xl mx-auto">
+                    <p>&copy; 2026 MemeWorks. All rights reserved.</p>
+                </div>
+            </div>
+
+            <!-- Big Text at bottom -->
+            <div class="absolute bottom-0 left-0 w-full overflow-hidden opacity-5 pointer-events-none">
+                <h1 class="text-[13vw] font-black text-white leading-none text-center transform translate-y-1/3 whitespace-nowrap">MEMEWORKS</h1>
+            </div>
+        </footer>
+
+    </main>
+
+    <script>
+        // Init Lenis Smooth Scroll
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+        })
+
+        function raf(time) {
+            lenis.raf(time)
+            requestAnimationFrame(raf)
+        }
+        requestAnimationFrame(raf)
+
+        // Register GSAP ScrollTrigger
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Preloader Logic
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => {
+                loader.style.display = 'none';
+                
+                // 1. Trigger Hero Text Animations
+                const tl = gsap.timeline();
+
+                tl.to('.hero-text', {
+                    y: 0,
+                    opacity: 1,
+                    duration: 1.2,
+                    stagger: 0.15,
+                    ease: 'power4.out'
+                });
+
+                // 2. Animate the Hero SVG Line (The Thread)
+                const heroPath = document.querySelector('#heroPath');
+                const heroPathLength = heroPath.getTotalLength();
+                
+                // Setup before animation (ensure dasharray covers line)
+                heroPath.style.strokeDasharray = heroPathLength;
+                heroPath.style.strokeDashoffset = heroPathLength;
+                
+                // Animate opacity up and draw the line
+                gsap.to(heroPath, {
+                    opacity: 0.8, // Fade in
+                    strokeDashoffset: 0, // Draw line
+                    duration: 2.5,
+                    ease: "power2.inOut",
+                    delay: 0.2
+                });
+
+                // 3. Pop up the nodes
+                // Changed from .from() to .to() because we are starting with opacity-0 scale-0 classes
+                gsap.to('.hero-node', {
+                    scale: 1,
+                    rotation: (i) => i % 2 === 0 ? -12 + (i*5) : 6 - (i*2), // keep slight random rotation
+                    opacity: 1,
+                    duration: 0.8,
+                    delay: 1.5,
+                    stagger: 0.2,
+                    ease: 'back.out(1.7)'
+                });
+
+                // 4. Fade in the marquee strip after nodes arrive
+                gsap.to('#marquee', {
+                    opacity: 1,
+                    duration: 0.8,
+                    delay: 2.2,
+                    ease: 'power2.out'
+                });
+
+            }, 700);
+        });
+
+        // Scrollytelling 'Snake' Animation
+        // This simulates a drawing path effect based on scrolling
+        const path = document.querySelector("#snakePath");
+        const pathLength = path.getTotalLength();
+        
+        // Set up dash styles
+        path.style.strokeDasharray = pathLength;
+        path.style.strokeDashoffset = pathLength;
+
+        gsap.to(path, {
+            strokeDashoffset: 0,
+            ease: "none",
+            scrollTrigger: {
+                trigger: "#methodology",
+                start: "top center",
+                end: "bottom bottom",
+                scrub: 1,
+            }
+        });
+
+        // Parallax effects for cards in methodology section
+        const scrollSections = document.querySelectorAll('.scroll-section');
+        scrollSections.forEach((section, index) => {
+            const card = section.querySelector('.hover-card');
+            if(card) {
+                gsap.from(card, {
+                    y: 100,
+                    opacity: 0,
+                    duration: 1,
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top 70%",
+                        end: "top 30%",
+                        scrub: false,
+                        toggleActions: "play none none reverse"
+                    }
+                });
+            }
+        });
+
+        // Stats Counter Animation
+        const stats = document.querySelectorAll('.stat-number');
+        stats.forEach(stat => {
+            // Placeholder for simpler counter logic if needed, 
+            // but for now relying on static elegant numbers.
+        });
+
+    </script>
+</body>
+</html>
