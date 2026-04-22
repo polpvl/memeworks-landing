@@ -30,3 +30,6 @@ yarn-error.log*
 
 # Claude Code local
 .claude/
+
+# Internal context — never commit
+CONTEXT.md
