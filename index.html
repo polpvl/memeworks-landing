@@ -3,31 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Primary -->
-    <title>MemeWorks. The Vibe Culture Platform.</title>
-    <meta name="description" content="Every AI model. One canvas. No tabs. The workflow platform for pro creators building the next generation of internet culture.">
-    <link rel="icon" type="image/png" href="/assets/favicon.png">
-    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
-
-    <!-- Open Graph (Facebook, LinkedIn, iMessage, Slack, Discord) -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://memeworks.ai">
-    <meta property="og:title" content="MemeWorks. The Vibe Culture Platform.">
-    <meta property="og:description" content="Every AI model. One canvas. No tabs. Built by the team behind WOMBO.">
-    <meta property="og:image" content="https://memeworks.ai/assets/og-image.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:site_name" content="MemeWorks">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://memeworks.ai">
-    <meta name="twitter:title" content="MemeWorks. The Vibe Culture Platform.">
-    <meta name="twitter:description" content="Every AI model. One canvas. No tabs. Built by the team behind WOMBO.">
-    <meta name="twitter:image" content="https://memeworks.ai/assets/og-image.png">
-
-    <!-- Theme -->
-    <meta name="theme-color" content="#0a0a0a">
+    <title>MemeWorks | Human-First Data</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -35,7 +11,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Shantell+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -51,24 +27,32 @@
                 extend: {
                     colors: {
                         brand: {
-                            green: '#8ED462',
-                            cream: '#F5F1E4',
-                            dark: '#2C2E2A',
-                            white: '#FFFFFF',
-                            orange: '#FF8A65' // Complementary accent
+                            paper: '#F4EFE6',
+                            'paper-2': '#EAE3D4',
+                            ink: '#181716',
+                            pencil: '#6B655C',
+                            accent: '#FF5A1F',
+                            // keeping cream/dark aliases so we don't break everything downstream
+                            cream: '#F4EFE6',
+                            'cream-2': '#EAE3D4',
+                            dark: '#181716',
+                            orange: '#FF5A1F',
+                            peach: '#FAD9C8',
+                            // Node state colors from wireframe legend
+                            cached: '#2D7A5F',
+                            dirty: '#E8B04F',
+                            running: '#4A90E2',
+                            failed: '#C84B3E'
                         }
                     },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['Shantell Sans', 'ui-sans-serif', 'system-ui'],
+                        mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+                        script: ['Caveat', 'cursive']
                     },
                     fontSize: {
                         'huge': 'clamp(4rem, 15vw, 12rem)',
                         'big-header': 'clamp(2.5rem, 6vw, 5rem)',
-                    },
-                    borderRadius: {
-                        'xl': '1rem',
-                        '2xl': '2rem',
-                        '3xl': '3rem',
                     },
                     animation: {
                         'spin-slow': 'spin 12s linear infinite',
@@ -80,22 +64,78 @@
 
     <style>
         body {
-            background-color: #F5F1E4;
-            color: #2C2E2A;
+            background-color: #F4EFE6;
+            color: #181716;
             overflow-x: hidden;
+            font-family: 'Shantell Sans', ui-sans-serif, system-ui, sans-serif;
+            font-weight: 400;
+            /* Dotted grid background from wireframes */
+            background-image: radial-gradient(circle, rgba(24,23,22,0.07) 1px, transparent 1px);
+            background-size: 24px 24px;
         }
 
         .lenis.lenis-smooth {
             scroll-behavior: auto;
         }
 
-        .clip-text-image {
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            background-image: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
+        /* Script font (display/warmth) */
+        .font-script {
+            font-family: 'Caveat', cursive;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+        }
+
+        /* SKETCHY / HAND-DRAWN BORDERS
+           Use irregular border-radius to fake a hand-drawn box. */
+        .sketch-box {
+            border: 1.5px solid #181716;
+            border-radius: 14px 16px 13px 15px / 15px 13px 16px 14px;
+            background-color: #F4EFE6;
+        }
+        .sketch-box-sm {
+            border: 1.5px solid #181716;
+            border-radius: 8px 10px 9px 11px / 10px 9px 11px 8px;
+        }
+        .sketch-pill {
+            border: 1.5px solid #181716;
+            border-radius: 999px;
+        }
+
+        /* Post-it style sticky notes */
+        .sticky-note {
+            font-family: 'Caveat', cursive;
+            font-size: 1.1rem;
+            line-height: 1.2;
+            padding: 0.75rem 1rem;
+            border: 1.5px solid #181716;
+            border-radius: 4px 6px 5px 7px / 6px 5px 7px 4px;
+            box-shadow: 3px 3px 0 rgba(24,23,22,0.12);
+            color: #181716;
+        }
+        .sticky-yellow { background: #FCEFA7; }
+        .sticky-peach  { background: #FAD9C8; }
+        .sticky-blue   { background: #CFE1F5; }
+
+        /* Node-state dots (from wireframe legend) */
+        .node-dot {
+            width: 8px; height: 8px; border-radius: 999px;
+            display: inline-block;
+            vertical-align: middle;
+            border: 1.5px solid #181716;
+        }
+        .node-dot.cached  { background: #2D7A5F; }
+        .node-dot.dirty   { background: #E8B04F; }
+        .node-dot.running { background: #4A90E2; }
+        .node-dot.failed  { background: #C84B3E; }
+
+        /* ALL CAPS MONO LABEL (breadcrumbs, section tags, data) */
+        .label-caps {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            font-weight: 500;
+            color: #6B655C;
         }
 
         /* SVG Path Animation utilities */
@@ -126,114 +166,144 @@
             transform: translateY(-10px) scale(1.02);
         }
 
-        /* Node Hover - subtle lift and straighten */
+        /* Node hover - subtle lift that preserves each node's rotation via CSS variable */
         .hero-node {
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
+            will-change: transform;
+            transform: rotate(var(--node-rot, 0deg));
         }
         .hero-node:hover {
-            transform: translateY(-8px) rotate(0deg) scale(1.05) !important;
+            transform: rotate(var(--node-rot, 0deg)) translateY(-8px) !important;
             z-index: 30;
         }
 
-        .blob-bg {
-            position: absolute;
-            filter: blur(80px);
-            opacity: 0.6;
-            z-index: 0;
+        /* Primary CTA button - orange, sketch-styled */
+        .btn-primary {
+            background: #FF5A1F;
+            color: #FFFFFF;
+            border: 1.5px solid #181716;
+            border-radius: 12px 14px 13px 15px / 14px 13px 15px 12px;
+            font-family: 'Shantell Sans', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+            box-shadow: 4px 4px 0 #181716;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .btn-primary:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 #181716;
+        }
+        .btn-primary:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 #181716;
+        }
+
+        /* Secondary/ghost button */
+        .btn-ghost {
+            background: transparent;
+            color: #181716;
+            border: 1.5px solid #181716;
+            border-radius: 12px 14px 13px 15px / 14px 13px 15px 12px;
+            font-family: 'Shantell Sans', sans-serif;
+            font-weight: 600;
+            transition: background 0.2s ease;
+        }
+        .btn-ghost:hover {
+            background: #181716;
+            color: #F4EFE6;
         }
     </style>
 </head>
 <body>
 
     <!-- Loading Overlay -->
-    <div id="loader" class="fixed inset-0 bg-brand-green z-[100] flex items-center justify-center transition-all duration-700">
-        <div class="text-brand-dark text-4xl font-bold tracking-tighter">Meme<span class="italic font-light">Works</span></div>
+    <div id="loader" class="fixed inset-0 bg-brand-cream z-[100] flex items-center justify-center transition-all duration-700">
+        <div class="text-brand-dark text-6xl font-script">memeworks</div>
     </div>
 
     <!-- Main Wrapper -->
     <main>
 
         <!-- HERO SECTION -->
-        <section class="relative min-h-[90vh] bg-brand-green flex flex-col justify-center items-center pt-12 pb-12 overflow-hidden">
-            
-            <!-- Animated Background Lines (The Thread) -->
+        <!-- HERO SECTION -->
+        <section class="relative min-h-[90vh] bg-brand-cream flex flex-col justify-center items-center pt-16 pb-16 overflow-hidden">
+
+            <!-- Hand-drawn wire connector (SVG) running through the hero -->
             <div class="absolute inset-0 w-full h-full pointer-events-none z-0">
                 <svg class="w-full h-full" viewBox="0 0 1440 900" fill="none" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Main Path -->
-                    <path id="heroPath" d="M-100,200 C150,200 400,100 600,300 C800,500 1000,200 1200,400 C1350,550 1100,750 720,850 C500,900 720,1000 720,1200" 
-                    stroke="#F5F1E4" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" class="path-line opacity-0"/>
+                    <path id="heroPath" d="M-100,200 C150,200 400,100 600,300 C800,500 1000,200 1200,400 C1350,550 1100,750 720,850 C500,900 720,1000 720,1200"
+                        stroke="#181716" stroke-width="2" stroke-linecap="round" fill="none" class="path-line opacity-0"/>
                 </svg>
             </div>
 
-            <!-- Floating Node Modules (Positioned along the canvas path) -->
+            <!-- Floating Node Modules -->
             <div class="absolute inset-0 z-0 pointer-events-none">
-                <!-- Node 1: Top Left - Generate Image -->
-                <div class="hero-node opacity-0 absolute top-[22%] left-[12%] bg-white rounded-xl shadow-lg rotate-[-8deg] transform scale-0 border border-brand-dark/10 pointer-events-auto">
-                    <div class="flex items-center gap-2 px-3 py-2 border-b border-brand-dark/10">
-                        <div class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                        <span class="text-[9px] font-bold uppercase tracking-widest text-gray-400">Image</span>
+
+                <!-- Node 1: Top Left - CAPTURE (cached/green state) -->
+                <div class="hero-node opacity-0 absolute top-[20%] left-[10%] scale-0 pointer-events-auto sketch-box px-0 py-0" style="min-width:180px; --node-rot: -6deg;">
+                    <div class="flex items-center gap-2 px-3 py-2 border-b border-brand-dark/30">
+                        <span class="node-dot cached"></span>
+                        <span class="label-caps">capture</span>
                     </div>
-                    <div class="flex items-center gap-2 px-3 py-2 relative">
-                        <i class="fa-solid fa-wand-magic-sparkles text-xs text-brand-dark"></i>
-                        <span class="text-[11px] font-bold text-brand-dark">Generate Image</span>
-                        <div class="absolute -right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-white border-2 border-brand-dark rounded-full"></div>
+                    <div class="px-3 py-2.5 relative">
+                        <span class="font-mono text-xs font-semibold text-brand-dark">ref.mp4 · 5.2s</span>
+                        <!-- output port -->
+                        <div class="absolute -right-2 top-1/2 -translate-y-1/2 w-3 h-3 bg-brand-cream border-[1.5px] border-brand-dark rounded-full"></div>
                     </div>
                 </div>
 
-                <!-- Node 2: Right Middle - Clone Voice -->
-                <div class="hero-node opacity-0 absolute top-[38%] right-[12%] bg-brand-dark rounded-xl shadow-xl rotate-[5deg] transform scale-0 pointer-events-auto">
-                    <div class="flex items-center gap-2 px-3 py-2 border-b border-white/10">
-                        <div class="w-1.5 h-1.5 bg-brand-green rounded-full"></div>
-                        <span class="text-[9px] font-bold uppercase tracking-widest text-white/50">Audio</span>
+                <!-- Node 2: Right Middle - I→V (dirty/yellow state, peach accent like the GEN nodes in wireframes) -->
+                <div class="hero-node opacity-0 absolute top-[36%] right-[10%] scale-0 pointer-events-auto sketch-box bg-brand-peach" style="min-width:200px; --node-rot: 4deg;">
+                    <div class="flex items-center gap-2 px-3 py-2 border-b border-brand-dark/30">
+                        <span class="node-dot dirty"></span>
+                        <span class="label-caps">i→v · veo 3.1</span>
+                        <span class="ml-auto bg-brand-orange text-white text-[9px] font-bold px-1.5 py-0.5 rounded" style="letter-spacing:0.1em;">GEN</span>
                     </div>
-                    <div class="flex items-center gap-2 px-3 py-2 relative">
-                        <div class="absolute -left-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-brand-dark border-2 border-brand-green rounded-full"></div>
-                        <i class="fa-solid fa-wave-square text-xs text-brand-green"></i>
-                        <span class="text-[11px] font-bold text-brand-cream">Clone Voice</span>
-                        <div class="absolute -right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-brand-dark border-2 border-brand-green rounded-full"></div>
+                    <div class="px-3 py-2.5 relative flex items-center gap-2">
+                        <!-- input port -->
+                        <div class="absolute -left-2 top-1/2 -translate-y-1/2 w-3 h-3 bg-brand-cream border-[1.5px] border-brand-dark rounded-full"></div>
+                        <span class="font-mono text-xs font-semibold text-brand-dark">9:16 · 5s · N=4</span>
+                        <!-- output port -->
+                        <div class="absolute -right-2 top-1/2 -translate-y-1/2 w-3 h-3 bg-brand-cream border-[1.5px] border-brand-dark rounded-full"></div>
                     </div>
                 </div>
 
-                <!-- Node 3: Bottom Left - Output Video -->
-                <div class="hero-node opacity-0 absolute bottom-[28%] left-[18%] bg-brand-cream border-2 border-brand-dark rounded-lg shadow-[4px_4px_0px_rgba(0,0,0,1)] rotate-[-3deg] transform scale-0 pointer-events-auto">
-                    <div class="flex items-center gap-2 px-3 py-2 border-b-2 border-brand-dark">
-                        <div class="w-1.5 h-1.5 bg-brand-dark rounded-full"></div>
-                        <span class="text-[9px] font-bold uppercase tracking-widest text-brand-dark/60">Output</span>
+                <!-- Node 3: Bottom Left - EXPORT (running/blue state) -->
+                <div class="hero-node opacity-0 absolute bottom-[24%] left-[16%] scale-0 pointer-events-auto sketch-box" style="min-width:200px; --node-rot: -2deg;">
+                    <div class="flex items-center gap-2 px-3 py-2 border-b border-brand-dark/30">
+                        <span class="node-dot running"></span>
+                        <span class="label-caps">export mp4</span>
                     </div>
-                    <div class="flex items-center gap-2 px-3 py-2 relative">
-                        <div class="absolute -left-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-brand-cream border-2 border-brand-dark rounded-full"></div>
-                        <i class="fa-solid fa-film text-xs text-brand-dark"></i>
-                        <span class="text-[11px] font-bold text-brand-dark">Output Video</span>
+                    <div class="px-3 py-2.5 relative">
+                        <!-- input port -->
+                        <div class="absolute -left-2 top-1/2 -translate-y-1/2 w-3 h-3 bg-brand-cream border-[1.5px] border-brand-dark rounded-full"></div>
+                        <span class="font-mono text-xs font-semibold text-brand-dark">00:12.4 · h264</span>
                     </div>
                 </div>
+
             </div>
 
             <!-- Main Content -->
             <div class="container mx-auto px-4 text-center z-10 relative">
-                
-                <div class="mb-8 inline-flex items-center gap-2 bg-brand-dark/5 backdrop-blur-sm px-5 py-2 rounded-full border border-brand-dark/10 text-brand-dark font-bold text-sm tracking-wide hero-text translate-y-20 opacity-0">
-                    <span class="w-2 h-2 bg-brand-dark rounded-full"></span> WAITLIST NOW OPEN
-                </div>
 
-                <h1 class="font-extrabold leading-[0.85] tracking-tight text-brand-dark mb-8 relative uppercase text-[clamp(3rem,10vw,9rem)]">
-                    <!-- Text Layers for depth effect with the SVG line -->
-                    <span class="block relative z-10 hero-text translate-y-20 opacity-0 mix-blend-hard-light">The Vibe</span>
-                    <span class="block relative z-10 hero-text translate-y-20 opacity-0">Culture Platform<span class="text-brand-cream">.</span></span>
-                    
-                    <span class="block text-xl md:text-3xl font-medium tracking-normal mt-8 max-w-2xl mx-auto leading-normal translate-y-20 opacity-0 hero-text text-brand-dark/80 normal-case">
-                        Culture is made on a canvas now.
-                    </span>
-                </h1>   
+                <h1 class="relative mb-2">
+                    <span class="block font-script text-brand-dark hero-text translate-y-20 opacity-0" style="font-size:clamp(3.5rem, 11vw, 10rem); line-height:0.95;">the vibe</span>
+                    <span class="block font-script text-brand-dark hero-text translate-y-20 opacity-0" style="font-size:clamp(3.5rem, 11vw, 10rem); line-height:0.95;">culture platform<span class="text-brand-orange">.</span></span>
+                </h1>
 
-                <div class="mt-8 flex justify-center gap-4 translate-y-20 opacity-0 hero-text relative z-20">
-                    <a href="#methodology" class="bg-brand-dark text-brand-cream px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-brand-dark transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1" rel="nofollow">
-                        Peek inside
+                <p class="font-sans text-base md:text-lg text-brand-dark/80 hero-text translate-y-20 opacity-0 mt-6 max-w-xl mx-auto">
+                    culture is made on a canvas now.
+                </p>
+
+                <div class="mt-10 flex justify-center gap-4 hero-text translate-y-20 opacity-0 relative z-20">
+                    <a href="#methodology" class="btn-primary px-8 py-4 text-base inline-flex items-center gap-2" rel="nofollow">
+                        peek inside <i class="fa-solid fa-arrow-right text-xs"></i>
                     </a>
                 </div>
 
-                <p class="mt-6 text-sm text-brand-dark/60 font-medium translate-y-20 opacity-0 hero-text relative z-20">
-                    Built by the team behind WOMBO <span class="mx-2 opacity-40">·</span> 200M+ downloads <span class="mx-2 opacity-40">·</span> Google Play Best App <span class="mx-2 opacity-40">·</span> NVIDIA-backed
+                <p class="mt-8 font-sans text-sm text-brand-pencil hero-text translate-y-20 opacity-0">
+                    built by the team behind WOMBO · 200M+ downloads · Google Play Best App · NVIDIA-backed
                 </p>
 
             </div>
@@ -255,28 +325,28 @@
         <!-- SCROLLYTELLING "SNAKE" SECTION -->
         <section id="methodology" class="relative bg-brand-cream py-32 overflow-hidden">
             
-            <!-- The Path (SVG) -->
-            <div class="absolute inset-0 pointer-events-none w-full h-full z-0 opacity-50">
+            <!-- The Path (SVG) - hand-drawn wire that draws itself in on scroll -->
+            <div class="absolute inset-0 pointer-events-none w-full h-full z-0">
                 <svg class="w-full h-full" viewBox="0 0 1440 3200" fill="none" preserveAspectRatio="xMidYMin slice" xmlns="http://www.w3.org/2000/svg">
                     <path id="snakePath" d="M720,0 C720,0 720,200 720,300 C720,600 200,600 200,900 C200,1200 1240,1200 1240,1500 C1240,1800 200,1800 200,2100 C200,2400 720,2400 720,2700 C720,2900 720,3200 720,3200" 
-                    stroke="#8ED462" stroke-width="120" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    stroke="#181716" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.5"/>
                 </svg>
             </div>
 
             <div class="container mx-auto px-4 relative z-10">
                 
                 <h2 class="text-big-header font-bold text-center mb-32 relative">
-                    Every AI model. One canvas.<br><span class="text-brand-green bg-brand-dark px-4 rounded-xl inline-block transform -rotate-2">No tabs.</span>
+                    Every AI model. One canvas.<br><span class="text-brand-accent bg-brand-dark px-4 rounded-xl inline-block transform -rotate-2">No tabs.</span>
                 </h2>
 
                 <!-- Step 1 -->
                 <div class="flex flex-col md:flex-row items-center justify-between mb-48 min-h-[50vh] scroll-section">
                     <div class="w-full md:w-5/12 order-2 md:order-1">
-                        <div class="bg-white p-10 rounded-3xl shadow-2xl hover-card border-b-8 border-brand-green">
+                        <div class="bg-white p-10 rounded-3xl shadow-2xl hover-card border-b-8 border-brand-accent">
                             <div class="w-16 h-16 bg-brand-cream rounded-full flex items-center justify-center mb-6 text-2xl">🔭</div>
                             <h3 class="text-3xl font-bold mb-4">Discover</h3>
                             <p class="text-lg text-gray-600 mb-6">Find trends, formats, and ideas at lightning speed. The culture is moving. You'll see it first.</p>
-                            <button class="text-brand-dark font-bold underline decoration-brand-green decoration-4 hover:bg-brand-green hover:no-underline transition-all px-2 md:text-lg">See Trends</button>
+                            <button class="text-brand-dark font-bold underline decoration-brand-accent decoration-4 hover:bg-brand-accent hover:no-underline transition-all px-2 md:text-lg">See Trends</button>
                         </div>
                     </div>
                     <!-- Empty space for snake path -->
@@ -329,7 +399,7 @@
                             </div>
                         </div>
                         <!-- Floating "LIVE" badge -->
-                        <div class="absolute -top-3 -right-3 bg-brand-green text-brand-dark text-xs font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg rotate-[8deg] flex items-center gap-1.5 border-2 border-brand-dark">
+                        <div class="absolute -top-3 -right-3 bg-brand-accent text-brand-dark text-xs font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg rotate-[8deg] flex items-center gap-1.5 border-2 border-brand-dark">
                             <div class="w-1.5 h-1.5 bg-brand-dark rounded-full animate-pulse"></div>
                             Shipped
                         </div>
@@ -343,16 +413,16 @@
         <section class="bg-white py-24 rounded-t-[4rem]">
             <div class="container mx-auto px-4">
                 <div class="text-center mb-20">
-                    <h2 class="text-5xl md:text-7xl font-bold mb-6">Built for the <span class="text-brand-green italic">shift</span>.</h2>
+                    <h2 class="text-5xl md:text-7xl font-bold mb-6">Built for the <span class="text-brand-accent italic">shift</span>.</h2>
                     <p class="text-xl text-gray-500 max-w-3xl mx-auto">Vibe coding took the friction out of building. Vibe culture takes the friction out of creating culture.</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
                     <!-- Big Cell: Studio -->
                     <div class="md:col-span-2 bg-brand-cream rounded-3xl p-10 flex flex-col justify-between min-h-[300px] relative overflow-hidden group">
-                        <div class="absolute right-0 bottom-0 w-64 h-64 bg-brand-green rounded-full translate-x-1/2 translate-y-1/2 group-hover:scale-110 transition-transform duration-500"></div>
+                        <div class="absolute right-0 bottom-0 w-64 h-64 bg-brand-accent rounded-full translate-x-1/2 translate-y-1/2 group-hover:scale-110 transition-transform duration-500"></div>
                         <div>
-                            <span class="block text-xl font-medium mb-2 opacity-60">01 · Studio</span>
+                            <span class="block text-xl font-medium mb-2 opacity-60">01 — Studio</span>
                             <h3 class="text-5xl md:text-7xl font-bold tracking-tight text-brand-dark leading-[0.95]">One canvas.<br>Every model.</h3>
                         </div>
                         <p class="text-xl font-medium relative z-10 max-w-md mt-6">Image, video, audio, AI-native experiences for your audience, and so much more.</p>
@@ -361,16 +431,16 @@
                     <!-- Tall Cell: Marketplace -->
                     <div class="bg-brand-dark text-white rounded-3xl p-10 flex flex-col justify-center text-left relative overflow-hidden group">
                         <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-                        <i class="fa-solid fa-shuffle text-5xl text-brand-green mb-6 group-hover:rotate-180 transition-transform duration-500 relative z-10"></i>
-                        <span class="block text-sm font-bold uppercase tracking-widest opacity-60 mb-2 relative z-10">02 · Marketplace</span>
+                        <i class="fa-solid fa-shuffle text-5xl text-brand-accent mb-6 group-hover:rotate-180 transition-transform duration-500 relative z-10"></i>
+                        <span class="block text-sm font-bold uppercase tracking-widest opacity-60 mb-2 relative z-10">02 — Marketplace</span>
                         <h3 class="text-3xl md:text-4xl font-bold mb-3 relative z-10 leading-tight">Formats, not files.</h3>
                         <p class="opacity-70 relative z-10">Publish a workflow. Others browse, run, remix, fork.</p>
                     </div>
 
                     <!-- Wide Cell: Attribution -->
-                    <div class="md:col-span-3 bg-brand-green rounded-3xl p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+                    <div class="md:col-span-3 bg-brand-accent rounded-3xl p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
                         <div class="text-left">
-                            <span class="block text-sm font-bold uppercase tracking-widest text-brand-dark/60 mb-2">03 · Attribution</span>
+                            <span class="block text-sm font-bold uppercase tracking-widest text-brand-dark/60 mb-2">03 — Attribution</span>
                             <h3 class="text-4xl md:text-5xl font-bold text-brand-dark mb-3 leading-tight">Every remix traced.<br>Every originator paid.</h3>
                             <p class="text-xl font-medium text-brand-dark/80 max-w-2xl">A creator's back catalog becomes a passive income stream. Creative lineage becomes economically valuable, for the first time.</p>
                         </div>
@@ -379,7 +449,7 @@
                             <i class="fa-solid fa-arrow-right text-brand-dark/60"></i>
                             <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center font-bold text-brand-dark text-lg rotate-[4deg] shadow-lg">B</div>
                             <i class="fa-solid fa-arrow-right text-brand-dark/60"></i>
-                            <div class="w-14 h-14 bg-brand-dark rounded-2xl flex items-center justify-center font-bold text-brand-green text-lg rotate-[-3deg] shadow-lg">$</div>
+                            <div class="w-14 h-14 bg-brand-dark rounded-2xl flex items-center justify-center font-bold text-brand-accent text-lg rotate-[-3deg] shadow-lg">$</div>
                         </div>
                     </div>
                 </div>
@@ -390,17 +460,17 @@
         <footer class="bg-brand-dark pt-32 pb-12 rounded-t-[3rem] -mt-10 overflow-hidden relative">
             
             <!-- Background Blob -->
-            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-4xl bg-brand-green opacity-10 blur-[120px] rounded-full pointer-events-none"></div>
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-4xl bg-brand-accent opacity-10 blur-[120px] rounded-full pointer-events-none"></div>
 
             <div class="container mx-auto px-4 text-center relative z-10">
                 <div class="mb-12">
                      <span class="inline-block px-4 py-2 rounded-full border border-gray-600 text-gray-300 text-sm mb-6">Early access goes out in waves</span>
                     <h2 class="text-big-header font-bold text-white leading-tight mb-8">
                         The internet is about to get<br>
-                        a lot <span class="text-brand-green">more interesting.</span>
+                        a lot <span class="text-brand-accent">more interesting.</span>
                     </h2>
                     
-                    <a href="https://tally.so/r/9q6G0G" class="inline-flex items-center gap-4 bg-brand-green text-brand-dark text-xl md:text-2xl font-bold px-10 py-6 rounded-full hover:scale-105 hover:shadow-[0_0_40px_rgba(142,212,98,0.4)] transition-all duration-300" target="_blank" rel="nofollow noopener noreferrer">
+                    <a href="#" class="inline-flex items-center gap-4 bg-brand-accent text-brand-dark text-xl md:text-2xl font-bold px-10 py-6 rounded-full hover:scale-105 hover:shadow-[0_0_40px_rgba(255,90,31,0.3)] transition-all duration-300" rel="nofollow">
                         Join the waitlist <i class="fa-solid fa-arrow-right"></i>
                     </a>
                 </div>
@@ -458,28 +528,36 @@
                     ease: 'power4.out'
                 });
 
-                // 2. Animate the Hero SVG Line (The Thread)
+                // 2. Animate the hero line (same animation as original: fade opacity + draw-in together)
                 const heroPath = document.querySelector('#heroPath');
-                const heroPathLength = heroPath.getTotalLength();
-                
-                // Setup before animation (ensure dasharray covers line)
-                heroPath.style.strokeDasharray = heroPathLength;
-                heroPath.style.strokeDashoffset = heroPathLength;
-                
-                // Animate opacity up and draw the line
-                gsap.to(heroPath, {
-                    opacity: 0.8, // Fade in
-                    strokeDashoffset: 0, // Draw line
-                    duration: 2.5,
-                    ease: "power2.inOut",
-                    delay: 0.2
-                });
+                if (heroPath) {
+                    const heroPathLength = heroPath.getTotalLength();
+                    heroPath.style.strokeDasharray = heroPathLength;
+                    heroPath.style.strokeDashoffset = heroPathLength;
+                    gsap.to(heroPath, {
+                        opacity: 0.5,
+                        strokeDashoffset: 0,
+                        duration: 2.5,
+                        ease: "power2.inOut",
+                        delay: 0.2
+                    });
+                }
 
                 // 3. Pop up the nodes
-                // Changed from .from() to .to() because we are starting with opacity-0 scale-0 classes
-                gsap.to('.hero-node', {
+                // Kill the scale-0 Tailwind class so GSAP is the sole source of transform
+                const nodes = document.querySelectorAll('.hero-node');
+                nodes.forEach(n => n.classList.remove('scale-0'));
+
+                // Define per-node target rotations (matching the original Tailwind values)
+                const rotations = [-6, 4, -2];
+
+                // Set initial state
+                gsap.set(nodes, { scale: 0, opacity: 0 });
+
+                // Animate to final state and leave inline transform in place
+                gsap.to(nodes, {
                     scale: 1,
-                    rotation: (i) => i % 2 === 0 ? -12 + (i*5) : 6 - (i*2), // keep slight random rotation
+                    rotation: (i) => rotations[i] || 0,
                     opacity: 1,
                     duration: 0.8,
                     delay: 1.5,
@@ -498,25 +576,24 @@
             }, 700);
         });
 
-        // Scrollytelling 'Snake' Animation
-        // This simulates a drawing path effect based on scrolling
+        // Scrollytelling 'Snake' - line draws itself as user scrolls through the section
         const path = document.querySelector("#snakePath");
-        const pathLength = path.getTotalLength();
-        
-        // Set up dash styles
-        path.style.strokeDasharray = pathLength;
-        path.style.strokeDashoffset = pathLength;
+        if (path) {
+            const pathLength = path.getTotalLength();
+            path.style.strokeDasharray = pathLength;
+            path.style.strokeDashoffset = pathLength;
 
-        gsap.to(path, {
-            strokeDashoffset: 0,
-            ease: "none",
-            scrollTrigger: {
-                trigger: "#methodology",
-                start: "top center",
-                end: "bottom bottom",
-                scrub: 1,
-            }
-        });
+            gsap.to(path, {
+                strokeDashoffset: 0,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "#methodology",
+                    start: "top center",
+                    end: "bottom bottom",
+                    scrub: 1,
+                }
+            });
+        }
 
         // Parallax effects for cards in methodology section
         const scrollSections = document.querySelectorAll('.scroll-section');
